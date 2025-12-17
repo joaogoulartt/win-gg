@@ -37,9 +37,22 @@ To modify RAM or CPU cores, edit the `docker-compose.yaml` file:
 ```yaml
 environment:
   VERSION: "11"
-  RAM_SIZE: "8G"      # Change RAM here
-  CPU_CORES: "4"      # Change CPU cores here
+  RAM_SIZE: "8G"      # Change RAM here (e.g., "4G", "16G")
+  CPU_CORES: "4"      # Change CPU cores here (e.g., "2", "8")
 ```
+
+### USB Passthrough (Optional)
+
+To enable USB device passthrough, uncomment and configure in `docker-compose.yaml`:
+
+```yaml
+environment:
+  ARGUMENTS: "-device usb-host,vendorid=0xXXXX,productid=0xXXXX"
+devices:
+  - /dev/bus/usb  # Enable USB passthrough
+```
+
+Use `lsusb` to find your device's vendor and product IDs.
 
 After making changes, restart the container:
 
@@ -105,6 +118,7 @@ rm -rf windows/ shared/
 - Windows data is persisted in the `windows/` folder
 - The container uses `/dev/kvm` for hardware acceleration
 - A 2-minute graceful shutdown period is recommended (`stop_grace_period: 2m`)
+- Container is set to manual start (`restart: "no"`) - it won't auto-start on system boot
 
 ## ⚠️ Important Warnings
 
